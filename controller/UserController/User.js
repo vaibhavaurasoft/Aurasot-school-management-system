@@ -298,8 +298,8 @@ const UserbyId = TryCatch(async (req, res, next) => {
 
 // test
 const all = TryCatch(async(req,res,next)=>{
-    const data = await User.find()
-    res.json(data)
+   
+    res.json("this is testing on vercel")
 
 })
 
