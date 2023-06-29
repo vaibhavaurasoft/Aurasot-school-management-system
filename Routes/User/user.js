@@ -22,8 +22,8 @@ router.get(
 // get all users
 router.get(
   "/Alluser",
-  auth.isAuthenticateUser,
-  auth.authorizeRole("superAdmin"),
+  // auth.isAuthenticateUser,
+  // auth.authorizeRole("superAdmin"),
   User.AllUser
 );
 
