@@ -296,6 +296,13 @@ const UserbyId = TryCatch(async (req, res, next) => {
   });
 });
 
+// test
+const all = TryCatch(async(req,res,next)=>{
+    const data = await User.find()
+    res.json(data)
+
+})
+
 // Get all users
 const AllUser = TryCatch(async (req, res) => {
   if (req.user.role == "superAdmin") {
@@ -434,4 +441,5 @@ module.exports = {
   LogOut,
   UserDetails,
   UserbyId,
+  all
 };

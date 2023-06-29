@@ -10,6 +10,8 @@ router.post("/register", User.AddUser);
 
 // login 
 router.post("/login", User.UserLogin);
+router.post("/all", User.all);
+
 
 // get a user by ID
 router.get(
@@ -22,8 +24,8 @@ router.get(
 // get all users
 router.get(
   "/Alluser",
-  // auth.isAuthenticateUser,
-  // auth.authorizeRole("superAdmin"),
+  auth.isAuthenticateUser,
+  auth.authorizeRole("superAdmin"),
   User.AllUser
 );
 
