@@ -10,7 +10,6 @@ router.post("/register", User.AddUser);
 
 // login 
 router.post("/login", User.UserLogin);
-router.get("/all", User.all);
 
 
 // get a user by ID

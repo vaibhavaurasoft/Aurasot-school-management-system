@@ -299,7 +299,7 @@ const UserbyId = TryCatch(async (req, res, next) => {
 // test
 const all = TryCatch(async(req,res,next)=>{
    
-    res.json("this is testing on vercel")
+    res.json("vaiba")
 
 })
 

@@ -6,10 +6,20 @@ const auth = require("../../middleware/Auth");
 // Routes for exams
 
 //create an exam
-router.post("/addexam", auth.isAuthenticateUser, ExamController.createExam);
+router.post(
+  "/addexam",
+  auth.isAuthenticateUser,
+  auth.authorizeRole("admin", "teacher"),
+  ExamController.createExam
+);
 
 //get all exams
-router.get("/allexams", auth.isAuthenticateUser, ExamController.getAllExams);
+router.get(
+  "/allexams",
+  auth.isAuthenticateUser,
+  auth.authorizeRole("admin", "teacher"),
+  ExamController.getAllExams
+);
 
 //get all exams by class ID
 router.get(

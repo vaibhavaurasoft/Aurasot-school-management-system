@@ -15,7 +15,6 @@ router.post(
 router.get(
   "/allfees",
   auth.isAuthenticateUser,
-  auth.authorizeRole("admin", "superadmin", "teacher"),
   Data.SeeAllFee
 );
 

@@ -20,17 +20,10 @@ const RegisterSchool = new mongoose.Schema({
       },
     },
   ],
-  owneremail: {
-    type: String,
-    unique: true,
-    validate: [validator.isEmail, "Please enter a valid email"],
-  },
 
 
-  SchoolregistaionId: {
-    type: Number,
-    validate: [validator.isEmail, "Please enter a valid SchoolregistaionId"],
-  },
+
+
   ownerphonenumber: {
     type: Number,
     minLength: 9,
@@ -117,7 +110,7 @@ const RegisterSchool = new mongoose.Schema({
   ],
   schoolemail: {
     type: String,
-    validate: [validator.isEmail, "Please enter a school valid email"],
+    // validate: [validator.isEmail, "Please enter a school valid email"],
     // required: [true, "Please enter contectperson email id"],
   },
   city: {

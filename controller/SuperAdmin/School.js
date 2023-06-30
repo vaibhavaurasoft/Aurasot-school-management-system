@@ -147,17 +147,19 @@ const AllSchool = TryCatch(async (req, res, next) => {
   const totalSchool = schoolsWithCounts.length;
   const finalData = schoolsWithCounts.reverse();
   const totalUser = await User.countDocuments();
-  const totalStudent = await User.find({ role: "student" }).countDocuments();
-  const totalTeacher = await User.find({ role: "teacher" }).countDocuments();
+  const totalStudent = await User.countDocuments({ role: "student" })
+  const totalTeacher = await User.countDocuments({ role: "teacher" });
+  const totalAdmin = await User.countDocuments({ role: "admin" });
   const totalSuperAdmin = await User.find({
-    role: "superadmin",
+    role: "superAdmin",
   }).countDocuments();
 
   res.status(200).json({
     totalSchool,
-    totalTeacher,
-    totalSuperAdmin,
     totalUser,
+    totalSuperAdmin,
+    totalAdmin,
+    totalTeacher,
     totalStudent,
     SchoolList: finalData,
   });
