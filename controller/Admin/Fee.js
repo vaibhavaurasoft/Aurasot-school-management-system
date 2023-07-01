@@ -3,6 +3,7 @@ const TryCatch = require("../../middleware/TryCatch"); // TryCatch middleware
 const ErrorHandler = require("../../utils/errorHandel"); // ErrorHandler utility
 const SchoolClass = require("../../model/SchoolClass/Schoolclass"); // SchoolClass model
 const School = require("../../model/SuperAdmin/School"); // School model
+const user = require("../../model/User/User")
 
 // add fees
 const AddFees = TryCatch(async (req, res) => {
@@ -53,10 +54,17 @@ const SeeAllFee = TryCatch(async (req, res) => {
     };
     const schoolcheck = await School.findById(schoolId);
     const data = await Fee.find(searchQuery);
+    // total fees of school
+    var total = 0
+    const TottalAllClassFee = data.map((e)=>{
+      total = total + e.fees
+    })
+// toal paid fees
+
     const totalClass = data.length;
     res
       .status(200)
-      .json({ School: schoolcheck.schoolname, TotalClass: totalClass, data });
+      .json({ School: schoolcheck.schoolname,totalfee : total ,TotalClass: totalClass, data });
   }
 });
 
@@ -64,7 +72,6 @@ const SeeAllFee = TryCatch(async (req, res) => {
 const GetFeesByClassName = TryCatch(async (req, res) => {
   const schoolId = req.user.schoolId;
   const { id } = req.params;
-  console.log(id);
 
   const existingClass = await Fee.findOne({ schoolId, classId: id });
 

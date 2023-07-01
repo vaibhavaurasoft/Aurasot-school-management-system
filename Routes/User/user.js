@@ -20,6 +20,23 @@ router.get(
   User.UserbyId
 );
 
+//  update a user by ID
+router.put(
+  "/updateusers/:id",
+  auth.isAuthenticateUser,
+  // auth.authorizeRole("superAdmin"),
+  User.UpdateUser
+);
+
+// / update a user by ID
+router.delete(
+  "/deleteusers/:id",
+  auth.isAuthenticateUser,
+  // auth.authorizeRole("superAdmin"),
+  User.DeleteUser
+);
+
+
 // get all users
 router.get(
   "/Alluser",
@@ -27,6 +44,8 @@ router.get(
   auth.authorizeRole("superAdmin"),
   User.AllUser
 );
+
+
 
 // Route for user logout
 router.post("/logout", auth.isAuthenticateUser, User.LogOut);

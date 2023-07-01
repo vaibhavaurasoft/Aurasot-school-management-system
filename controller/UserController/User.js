@@ -246,7 +246,7 @@ const UserbyId = TryCatch(async (req, res, next) => {
   const { id } = req.params;
 
   const role = req.user.role;
-  if (role === "superAdmin") {
+  if (role === "superAdmin" || role === "admin" || role === "teacher") {
     const user = await User.findById(id);
     if (!user) {
       return next(new ErrorHandler("User not found", 404));

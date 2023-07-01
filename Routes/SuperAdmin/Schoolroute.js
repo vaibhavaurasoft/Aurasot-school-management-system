@@ -16,8 +16,8 @@ router.post(
 // get all schools
 router.get(
   "/allschool",
-  auth.isAuthenticateUser,
-  auth.authorizeRole("superAdmin"),
+  // auth.isAuthenticateUser,
+  // auth.authorizeRole("superAdmin"),
   Schooldata.AllSchool
 );
 // get all schools

@@ -14,6 +14,14 @@ const multer = require("multer")
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
+
+// expreess use
+app.use(cors());
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // classroutes
 const SchoolClass = require("./Routes/schoolClass/schoolclass.js")
 
@@ -40,10 +48,6 @@ const addstudent = require("./Routes/Teacher/AddStudent");
 // routes
 const User = require("./Routes/User/user");
 
-// expreess use
-app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // school Class
 app.use("/",SchoolClass)
@@ -73,7 +77,6 @@ app.get("/",(req,res)=>{
 
 // middelwear for error
 app.use(Error);
-app.use(cors());
 
 
 module.exports = app;
