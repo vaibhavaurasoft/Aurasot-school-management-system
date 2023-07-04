@@ -299,6 +299,7 @@ const UpdateSchoolDetails = TryCatch(async (req, res) => {
     school: updatedSchool,
   });
 });
+ 
 
 // Delete school
 const DeleteSchool = TryCatch(async (req, res, next) => {
@@ -306,10 +307,14 @@ const DeleteSchool = TryCatch(async (req, res, next) => {
   if (!schoolId) {
     return res.json({ error: "Please provide SchoolId" });
   }
+  
   const school = await School.findByIdAndDelete(schoolId);
   if (!school) {
     return res.json({ error: "No School Available with this id" });
   }
+  
+  await User.deleteMany({ schoolId }); 
+  
   res.json({ success: "School details deleted successfully", school });
 });
 

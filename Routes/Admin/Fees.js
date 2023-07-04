@@ -22,18 +22,25 @@ router.get(
 router.get(
   "/feesbyclassid/:id",
   auth.isAuthenticateUser,
-  Data.GetFeesByClassName
+  Data.GetFeesByClassName 
+);
+
+// delete fees by class ID
+router.delete(
+  "/deletefess/:id",
+  auth.isAuthenticateUser,
+  Data.DelteFess
 );
 
 // update fees
 router.put(
-  "/updatefee",
+  "/updatefee/:id",
   auth.isAuthenticateUser,
   auth.authorizeRole("admin"),
   Data.UpdateFees
 );
 
-// get my fees (for students)
+// get my fees (for students) 
 router.get(
   "/myfees",
   auth.isAuthenticateUser,

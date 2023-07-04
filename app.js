@@ -2,18 +2,36 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const Error = require("./middleware/error");
-const multer = require("multer")
+const multer = require("multer");
 
+//  testing
+const nodemailer = require("nodemailer");
 
-//  middelwear
- 
+app.get("/mail", async (req, res) => {
+  let testAccount = await nodemailer.createTestAccount();
 
+  const transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    auth: {
+      user: "isai.thompson93@ethereal.email",
+      pass: "Y96vCQCWG1J1t5cMbH",
+    },
+  });
+  const info = await transporter.sendMail({
+    from: '"vaibhav rathore" <isai.thompson93@ethereal.email>', // sender address
+    to: "vaibhavrathorema@gmail.com", // list of receivers
+    subject: "Hello vaibhav rahteo", // Subject line
+    text: "good morning mail", // plain text body
+    html: "<b>this is vaibav rathore</b>", // html body
+  });
+  console.log("Message sent: %s", info.messageId);
+  res.json("vaibhav", info);
+});
 
- 
 // parse
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-
 
 // expreess use
 app.use(cors());
@@ -23,47 +41,43 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // classroutes
-const SchoolClass = require("./Routes/schoolClass/schoolclass.js")
+const SchoolClass = require("./Routes/schoolClass/schoolclass.js");
 
 // fees routes
 // const Fees = require("./Routes/collection/totalFee")
-const Fees = require("./Routes/Admin/Fees")
+const Fees = require("./Routes/Admin/Fees");
 
 // admin panel
 const AdminPanel = require("./Routes/Adminpanel/AdminPanel");
 
-
-// superadmin routes 
+// superadmin routes
 const School = require("./Routes/SuperAdmin/Schoolroute");
 const addadmin = require("./Routes/SuperAdmin/Adminroute");
 
-
-// admin routes 
+// admin routes
 const addTeacher = require("./Routes/Admin/AddTeacher");
-const Exam = require("./Routes/ExamRoutes/Exam")
+const Exam = require("./Routes/ExamRoutes/Exam");
 
 // teacher routes
-const addstudent = require("./Routes/Teacher/AddStudent"); 
-// 
+const addstudent = require("./Routes/Teacher/AddStudent");
+//
 // routes
 const User = require("./Routes/User/user");
 
-
 // school Class
-app.use("/",SchoolClass)
+app.use("/", SchoolClass);
 
 // Fee collection
-app.use("/",Fees)
+app.use("/", Fees);
 
 // super admin
 app.use("/", School);
 app.use("/", addadmin);
 app.use("/", AdminPanel);
 
-
 // admin
 app.use("/", addTeacher);
-app.use("/",Exam)
+app.use("/", Exam);
 
 // teacher
 app.use("/", addstudent);
@@ -71,24 +85,16 @@ app.use("/", addstudent);
 // calling apis
 app.use("/", User);
 
-app.get("/",(req,res)=>{
-    res.status(200).json({sucess :  "data is working properly"})
-})
+app.get("/", (req, res) => {
+  res.status(200).json({ sucess: "data is working properly" });
+});
 
 // middelwear for error
 app.use(Error);
 
-
 module.exports = app;
 
-
-
-
-
-
-
 // const ImageModel = require("../model/imageuploadmodel")
-
 
 // // Storage
 // const storage = multer.diskStorage({
@@ -149,7 +155,3 @@ module.exports = app;
 //       res.status(500).json({ error: err });
 //     });
 // });
-
-
-
-
