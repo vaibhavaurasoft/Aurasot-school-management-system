@@ -17,4 +17,7 @@ router
 router
   .route("/my-notification")
   .get(auth.isAuthenticateUser, Notification.mynotification);
+  router
+    .route("/delete-my-notification/:id")
+    .get(auth.isAuthenticateUser, Notification.deleteMyNotificationById);
 module.exports = router;

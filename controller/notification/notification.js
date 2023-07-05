@@ -131,6 +131,28 @@ const mynotification = Trycatch(async (req, res, next) => {
   res.json({ totalNotification, notifications });
 });
 
+// delete notification
+const deleteMyNotificationById = Trycatch(async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  // Check if the notification exists
+  const notification = await Notification.findById(id);
+  if (!notification) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+
+
+  // Delete the notification
+  await Notification.findByIdAndRemove(id);
+
+  // Delete the corresponding Notification2 entry
+  await Notification2.findOneAndRemove({ notificationId: id, userId });
+
+  res.json({ notification, message: "Notification deleted successfully" });
+});
+
+
 module.exports = {
   createNotification,
   getAllNotifications,
@@ -138,4 +160,5 @@ module.exports = {
   updateNotification,
   deleteNotification,
   mynotification,
+  deleteMyNotificationById
 };
