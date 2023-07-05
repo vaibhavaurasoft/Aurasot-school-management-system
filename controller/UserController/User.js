@@ -4,10 +4,9 @@ const ErrorHandler = require("../../utils/errorHandel");
 const sendToken = require("../../utils/jwtToken");
 const checkPostBody = require("../../utils/QueryCheck");
 const Fee = require("../../model/admin/Fee");
-const Userclass = require("../../model/SchoolClass/Schoolclass");
+const SchoolClass = require("../../model/SchoolClass/Schoolclass");
 const SchoolExam = require("../../model/ExamSchema/exammodel");
 const nodemailer = require("nodemailer");
-
 
 // create user
 const AddUser = TryCatch(async (req, res, next) => {
@@ -25,28 +24,28 @@ const AddUser = TryCatch(async (req, res, next) => {
 
   // Create user
   const user = await User.create(req.body);
-// sending mail
- let testAccount = await nodemailer.createTestAccount();
+  // sending mail
+  let testAccount = await nodemailer.createTestAccount();
 
- const transporter = nodemailer.createTransport({
-   //  host: "smtp.ethereal.email",
-   //  port: 587,
-   service: "gmail",
-   port: 587,
-   secure: false,
-   auth: {
-     //  user: "isai.thompson93@ethereal.email",
-     user: "vaibhav.aurasoft@gmail.com",
-     pass: "avjulakvbjgyfdmg",
-   },
- });
- const info = await transporter.sendMail({
-   from: '"vaibhav rathore" <isai.thompson93@ethereal.email>', // sender address
-   to: `${user.email}`, // list of receivers
-   subject: `Account created for ${req.body.role} `, // Subject line
-   text: "created account", // plain text body
-   html: `Here is your creadencial <br> email - ${user.email} <br> password - ${req.body.password} `, // html body
- });
+  const transporter = nodemailer.createTransport({
+    //  host: "smtp.ethereal.email",
+    //  port: 587,
+    service: "gmail",
+    port: 587,
+    secure: false,
+    auth: {
+      //  user: "isai.thompson93@ethereal.email",
+      user: "vaibhav.aurasoft@gmail.com",
+      pass: "avjulakvbjgyfdmg",
+    },
+  });
+  const info = await transporter.sendMail({
+    from: '"vaibhav rathore" <isai.thompson93@ethereal.email>', // sender address
+    to: `${user.email}`, // list of receivers
+    subject: `Account created for ${req.body.role} `, // Subject line
+    text: "created account", // plain text body
+    html: `Here is your creadencial <br> email - ${user.email} <br> password - ${req.body.password} `, // html body
+  });
 
   res.status(201).json({
     success: true,
@@ -75,7 +74,7 @@ const UserbyId = TryCatch(async (req, res, next) => {
 
   // Find class
   const classid = await user.classId;
-  const classfind = await Userclass.findOne(classid);
+  const classfind = await SchoolClass.findOne(classid);
 
   // Find fee
   const schoolId = await user.schoolId;
@@ -109,14 +108,24 @@ const UserbyId = TryCatch(async (req, res, next) => {
   });
 });
 
-// test
-const all = TryCatch(async(req,res,next)=>{
-   
-    res.json("vaiba")
 
-})
+// find all student by class Id
 
-// Get all users
+const StudentByClassID = TryCatch(async (req, res, next) => {
+  const { id } = req.params;
+  const schoolId = req.user.schoolId;
+  const searchQuery = {
+    classId: id,
+    schoolId,
+  };
+  const classdetails = await SchoolClass.findById(id);
+
+  const user = await User.find(searchQuery);
+  const toteluser = user.length
+  res.json({ toteluser, class: classdetails.className, user });
+});
+
+// Get all users  
 const AllUser = TryCatch(async (req, res) => {
   if (req.user.role == "superAdmin") {
     // Super admin fetching all users
@@ -254,5 +263,5 @@ module.exports = {
   LogOut,
   UserDetails,
   UserbyId,
-  all
+  StudentByClassID,
 };

@@ -44,7 +44,6 @@ router.put(
 router.get(
   "/myfees",
   auth.isAuthenticateUser,
-  auth.authorizeRole("student"),
   Data.MyFees
 );
 

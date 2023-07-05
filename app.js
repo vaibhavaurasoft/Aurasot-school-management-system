@@ -4,30 +4,6 @@ const cors = require("cors");
 const Error = require("./middleware/error");
 const multer = require("multer");
 
-//  testing
-const nodemailer = require("nodemailer");
-
-app.get("/mail", async (req, res) => {
-  let testAccount = await nodemailer.createTestAccount();
-
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    auth: {
-      user: "isai.thompson93@ethereal.email",
-      pass: "Y96vCQCWG1J1t5cMbH",
-    },
-  });
-  const info = await transporter.sendMail({
-    from: '"vaibhav rathore" <isai.thompson93@ethereal.email>', // sender address
-    to: "vaibhavrathorema@gmail.com", // list of receivers
-    subject: "Hello vaibhav rahteo", // Subject line
-    text: "good morning mail", // plain text body
-    html: "<b>this is vaibav rathore</b>", // html body
-  });
-  console.log("Message sent: %s", info.messageId);
-  res.json("vaibhav", info);
-});
 
 // parse
 const cookieParser = require("cookie-parser");
@@ -40,6 +16,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// notification
+const Notification  = require("./Routes/notification/notification")
+app.use("/",Notification)
 // classroutes
 const SchoolClass = require("./Routes/schoolClass/schoolclass.js");
 
@@ -63,6 +42,8 @@ const addstudent = require("./Routes/Teacher/AddStudent");
 //
 // routes
 const User = require("./Routes/User/user");
+
+
 
 // school Class
 app.use("/", SchoolClass);

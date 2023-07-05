@@ -16,8 +16,13 @@ router.post("/login", User.UserLogin);
 router.get(
   "/userbyId/:id",
   auth.isAuthenticateUser,
-  auth.authorizeRole("superAdmin"),
   User.UserbyId
+);
+// get a user by classID
+router.get(
+  "/student-by-classId/:id",
+  auth.isAuthenticateUser,
+  User.StudentByClassID
 );
 
 //  update a user by ID
