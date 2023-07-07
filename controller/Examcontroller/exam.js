@@ -6,8 +6,16 @@ const SchoolClass = require("../../model/SchoolClass/Schoolclass")
 const createExam = TryCatch(async (req, res) => {
   req.body.schoolId = req.user.schoolId;
   req.body.createdBy = req.user.id;
-  const { classId, subject, date, duration, totalMarks, createdBy, schoolId } =
-    req.body;
+  const {
+    classId,
+    subject,
+    date,
+    duration,
+    totalMarks,
+    createdBy,
+    schoolId,
+    examtype,
+  } = req.body;
     const className = await SchoolClass.findById(classId);
     const Examclass =  await className.className;
 
@@ -18,6 +26,7 @@ const createExam = TryCatch(async (req, res) => {
     duration,
     totalMarks,
     schoolId,
+    examtype,
     createdBy,
     classname:Examclass,
   });
@@ -31,28 +40,55 @@ const getAllExams = TryCatch(async (req, res) => {
   const searchQuery = {
     schoolId,
   };
-  const exams = await SchoolExam.find(searchQuery);
+  const exams = await SchoolExam.find(searchQuery)
+    .populate({
+      path: "schoolId",
+      select: ["schoolname"],
+    })
+    .populate({
+      path: "createdBy",
+      select: ["name"],
+    });
+
   res.json({ exams });
 });
+
 
 // Get all exams for a specific class
 const getAllExamsByClass = TryCatch(async (req, res) => {
   const { classId } = req.params;
+   const query = req.query;
   const schoolId = req.user.schoolId;
   const className = await SchoolClass.findById(classId)
-  const Examclass = className.className
+  
+  // const Examclass = className.className
   const searchQuery = {
     schoolId,
     classId,
+    ...query
   };
-  const exams = await SchoolExam.find(searchQuery);
-  res.json({ class : Examclass , exams });
+  // const exams = await SchoolExam.find(searchQuery)
+  const exams = await SchoolExam.find(searchQuery)
+    .populate({
+      path: "schoolId",
+      select: ["schoolname"],
+    })
+    .populate({
+      path: "createdBy",
+      select: ["name"],
+    })
+    // .populate({
+    //   path: "classId",
+    //   select: ["classname"],
+    // });
+
+  res.json({ exams });
 });
 
 // Get exam by ID
 const getExamById = TryCatch(async (req, res) => {
   const { examId } = req.params;
-  const exam = await SchoolExam.findById(examId);
+  const exam = await SchoolExam.findById(examId)
 
   if (!exam) {
     return res.status(404).json({ error: "Exam not found." });
@@ -66,7 +102,15 @@ const updateExamById = TryCatch(async (req, res) => {
   const { examId } = req.params;
   const exam = await SchoolExam.findByIdAndUpdate(examId, req.body, {
     new: true,
-  });
+  })
+    .populate({
+      path: "schoolId",
+      select: ["schoolname"],
+    })
+    .populate({
+      path: "createdBy",
+      select: ["name"],
+    });
 
   if (!exam) {
     return res.status(404).json({ error: "Exam not found." });
@@ -99,7 +143,15 @@ const MyExams = TryCatch(async (req, res) => {
     schoolId,
     classId,
   };
-  const exams = await SchoolExam.find(searchQuery);
+  const exams = await SchoolExam.find(searchQuery)
+    .populate({
+      path: "schoolId",
+      select: ["schoolname"],
+    })
+    .populate({
+      path: "createdBy",
+      select: ["name"],
+    });
   res.json({ exams });
 });
 

@@ -2,11 +2,14 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../controller/UserController/User");
 const auth = require("../../middleware/Auth");
+const upload = require("../../middleware/multer")
 
 // Routes for super admin
 
 // register a new user
+// router.post("/register", upload.single("profilepic"), User.AddUser);
 router.post("/register", User.AddUser);
+
 
 // login 
 router.post("/login", User.UserLogin);

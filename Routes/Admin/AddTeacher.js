@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/Auth");
 const Data = require("../../controller/UserController/User");
-
+const upload = require("../../middleware/multer")
 // add a teacher
 router.post(
   "/addteacher",
   auth.isAuthenticateUser,
   auth.authorizeRole("admin"),
+  // upload.single("profilepic"),
   Data.AddUser
 );
 

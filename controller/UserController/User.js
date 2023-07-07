@@ -7,9 +7,12 @@ const Fee = require("../../model/admin/Fee");
 const SchoolClass = require("../../model/SchoolClass/Schoolclass");
 const SchoolExam = require("../../model/ExamSchema/exammodel");
 const nodemailer = require("nodemailer");
+const multer = require("multer")
+const upload = require("../../middleware/multer");
+
 
 // create user
-const AddUser = TryCatch(async (req, res, next) => {
+const AddUser1 = TryCatch(async (req, res, next) => {
   // Check required fields based on the user role
   const role = req.user.role;
   if (role === "admin") {
@@ -17,6 +20,35 @@ const AddUser = TryCatch(async (req, res, next) => {
   } else if (role === "teacher") {
     await checkPostBody(["email", "password", "classId", "name"], req);
   }
+
+  // image upload section
+
+  const storage = multer.diskStorage({
+    destination: "uploads",
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    },
+  });
+
+  const upload = multer({ storage }).single("testImage");
+
+    upload(req, res, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: err });
+      }
+
+      const image = new ImageModel({
+        name: req.body.name,
+        image: {
+          data: req.file.filename,
+          contentType: "image/png"
+        }
+      });
+      image.save()
+    })
+
+  // image upload section end
 
   // Set additional request body fields
   req.body.CreateByuser = req.user.id;
@@ -52,6 +84,96 @@ const AddUser = TryCatch(async (req, res, next) => {
     user,
   });
 });
+// teting
+const AddUser = TryCatch(async (req, res, next) => {
+  // Check required fields based on the user role
+  const role = req.user.role;
+  if (role === "admin") {
+    await checkPostBody(["email", "password"], req);
+  } else if (role === "teacher") {
+    await checkPostBody(["email", "password", "classId", "name"], req);
+  }
+
+  // image upload section
+
+
+  // image upload section end
+
+  // Set additional request body fields
+  req.body.CreateByuser = req.user.id;
+  req.body.schoolId = req.user.schoolId;
+  //  req.body.profilepic = req.file.filename;
+
+  // Create user
+  const user = await User.create(req.body);
+  // sending mail
+  let testAccount = await nodemailer.createTestAccount();
+
+  const transporter = nodemailer.createTransport({
+    //  host: "smtp.ethereal.email",
+    //  port: 587,
+    service: "gmail",
+    port: 587,
+    secure: false,
+    auth: {
+      //  user: "isai.thompson93@ethereal.email",
+      user: "vaibhav.aurasoft@gmail.com",
+      pass: "avjulakvbjgyfdmg",
+    },
+  });
+  const info = await transporter.sendMail({
+    from: '"vaibhav rathore" <isai.thompson93@ethereal.email>', // sender address
+    to: `${user.email}`, // list of receivers
+    subject: `Account created for ${req.body.role} `, // Subject line
+    text: "created account", // plain text body
+    html: `Here is your creadencial <br> email - ${user.email} <br> password - ${req.body.password} `, // html body
+  });
+
+  res.status(201).json({
+    success: true,
+    user,
+  });
+});
+
+// const AddUser = TryCatch(async (req, res, next) => {
+//   // Check required fields based on the user role
+//   const role = req.user.role;
+//   if (role === "admin") {
+//     await checkPostBody(["email", "password"], req);
+//   } else if (role === "teacher") {
+//     await checkPostBody(["email", "password", "classId", "name"], req);
+//   }
+
+//   // File upload
+//   upload.single("profilepic")(req, res, (err) => {
+//     if (err) {
+//       // Handle multer error
+//       return res.status(400).json({
+//         success: false,
+//         error: "Error uploading file",
+//       });
+//     }
+
+//     // Set additional request body fields
+//     req.body.CreateByuser = req.user.id;
+//     req.body.schoolId = req.user.schoolId;
+//     req.body.profilepic = req.file ? req.file.filename : null;
+
+//     // Create user
+//     const user =  User.create(req.body);
+
+//     // Sending mail
+//     // ...
+
+//     res.status(201).json({
+//       success: true,
+//       user,
+//     });
+//   });
+// });
+
+
+
 
 // Get user by ID
 const UserbyId = TryCatch(async (req, res, next) => {
@@ -64,6 +186,23 @@ const UserbyId = TryCatch(async (req, res, next) => {
       return next(new ErrorHandler("User not found", 404));
     }
     res.json({ user });
+
+    // const user = await User.findById(id);
+
+    // console.log(user);
+
+    // if (!user) {
+    //   return next(new ErrorHandler("User not found", 404));
+    // }
+
+    // // Creating a copy of the user object and excluding the name field
+    // const userToSend = { ...user.toObject(), email: undefined };
+
+    // res.json({ user: userToSend });
+
+
+
+
   }
 
   // Find user by ID

@@ -13,23 +13,28 @@ const ExamSchema = new mongoose.Schema({
     type: Number,
     required: [true, "please enter exam time"],
   },
+  examtype: {
+    type: String,
+    enum:["Quarterly","Half Yearly","Yearly"],
+    required: [true, "please enter exam type"],
+  },
   totalMarks: {
     type: Number,
     required: [true, "please enter Toal marks"],
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: "Users",
     required: [true, "please enter created by id"],
   },
   schoolId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "schools",
+    ref: "Schools",
     required: [true, "please enter School  id"],
   },
   classId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "classs",
+    ref: "Class",
     required: [true, "please enter class  id"],
   },
   status: {
@@ -37,9 +42,7 @@ const ExamSchema = new mongoose.Schema({
     enum: ["upcoming", "history"],
     default: "upcoming",
   },
-  classname: {
-    type: String,
-  },
+  
 });
 
 const Exam = mongoose.model("Exam", ExamSchema);

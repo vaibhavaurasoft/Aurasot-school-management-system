@@ -52,10 +52,10 @@ const SeeAllFee = TryCatch(async (req, res) => {
       schoolId,
     };
     const schoolcheck = await School.findById(schoolId);
-    const data = await Fee.find(searchQuery);
+    const data = await Fee.find(searchQuery)
     // total fees of school
     var total = 0;
-    const TottalAllClassFee = data.map((e) => {
+    await data.map((e) => {
       total = total + e.fees;
     });
     // toal paid fees
@@ -125,7 +125,10 @@ const MySchoolFees = TryCatch(async (req, res) => {
   const searchQuery = {
     schoolId,
   };
-  const existingClass = await Fee.findOne(searchQuery);
+  const existingClass = await Fee.findOne(searchQuery).populate({
+    path: "schoolId",
+    select: ["schoolname"],
+  });
 
   const allData = {
     existingClass,

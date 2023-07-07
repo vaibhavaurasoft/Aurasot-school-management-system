@@ -9,15 +9,16 @@ const TotalFees = new mongoose.Schema({
   },
   classId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "Class",
     required: [true, "please enter classId"],
   },
   fees: {
     type: Number,
     required: [true, "please enter fees"],
   },
-  classname:{
-    type : String
-  }
+  classname: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Fee", TotalFees);

@@ -32,6 +32,12 @@ const Users = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "classes",
   },
+  profilepic: {
+    type: String,
+  },
+  subject: {
+    type: String,
+  },
   paidFees: {
     type: Number,
   },
@@ -59,8 +65,12 @@ const Users = new mongoose.Schema({
   },
   classId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "classes",
+    ref: "class",
   },
+  section:{
+      type: String,
+  },
+
   address: {
     type: String,
   },
