@@ -134,6 +134,7 @@ const AddSchool = TryCatch(async (req, res, next) => {
       },
     }); 
   }
+  
 
   const Admin = await User.create({
     ...req.body,

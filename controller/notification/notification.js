@@ -31,7 +31,7 @@ const createNotification = Trycatch(async (req, res, next) => {
     var notificationsend = await Notification2.create({
       notificationId: notification._id,
       userId: user._id,
-    });
+    }); 
   }
   res.status(201).json({
     message: "Notification send successfully",
@@ -78,7 +78,7 @@ const getNotificationById = Trycatch(async (req, res) => {
   const updatedNotification = { ...notification.toObject(), isview };
 
   res.json({ notification: updatedNotification });
-});
+}); 
 
  
 // Update a notification

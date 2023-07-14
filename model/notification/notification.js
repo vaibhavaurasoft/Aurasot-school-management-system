@@ -8,11 +8,11 @@ const Notification = new mongoose.Schema({
     type: String,
   },
   status: {
-    type: String,
+    type: String, 
     default: "active",
   },
   date: {
-    type: Date,
+    type: Date, 
     default: Date.now(),
   },
   CreateByuser: {
