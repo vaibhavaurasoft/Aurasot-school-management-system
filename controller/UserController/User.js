@@ -201,7 +201,10 @@ const UserbyId = TryCatch(async (req, res, next) => {
 
   // Find fee
   const schoolId = await Iduser.schoolId;
-  const classFees = await Fee.findOne({ schoolId, classId: classid });
+  const classFees = await Fee.findOne({ schoolId, classId: classid }).populate({
+    path: "schoolId",
+    select: ["schoolname"],
+  });
   // if(role==="student"){
   var totalFess = classFees.fees;
   var totalpaidfee = Iduser.feesinstall1 + Iduser.feesinstall2 + Iduser.feesinstall3;
@@ -258,11 +261,15 @@ const AllUser = TryCatch(async (req, res) => {
          ...query,
        };
     // const data = (await User.find(query)).reverse();
-     const apifeatures = new ApiFeatures(
-       User.find(searchQuery),
-       req.query
-     ).search();
-     const data = await apifeatures.query;
+     const apifeatures = new ApiFeatures(User.find(searchQuery), req.query)
+       .search()
+       
+     const data = await apifeatures.query
+       .populate({
+         path: "schoolId",
+         select: ["schoolname"],
+       })
+     
     // const apifeatures = new ApiFeatures(User.find(), req.query).search();
     // const data = await apifeatures.query;
 
@@ -284,8 +291,16 @@ const AllUser = TryCatch(async (req, res) => {
     const apifeatures = new ApiFeatures(
       User.find(searchQuery),
       req.query
-    ).search();
-    const data = await apifeatures.query;
+    ).search()
+    const data = await apifeatures.query
+      .populate({
+        path: "schoolId",
+        select: ["schoolname"],
+      })
+      .populate({
+        path: "CreateByuser",
+        select: ["name", "email", "role"],
+      });
     const totalUser = data.length;
 
     res.status(200).json({ totalUser, data });
@@ -511,7 +526,10 @@ const LogOut = TryCatch(async (req, res, next) => {
 
 // Get user details
 const UserDetails = TryCatch(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id).populate({
+    path: "schoolId",
+    select: ["schoolname"],
+  });
   res.status(200).json({
     sucess: true,
     user,

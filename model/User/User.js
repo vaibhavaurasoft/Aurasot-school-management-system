@@ -118,8 +118,8 @@ const Users = new mongoose.Schema({
 
   CreateByuser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
+    ref: "Users",
+  }, 
   createdAt: {
     type: Date,
     default: Date.now,
