@@ -249,10 +249,10 @@ const StudentByClassID = TryCatch(async (req, res, next) => {
 const AllUser = TryCatch(async (req, res) => {
   if (req.user.role == "superAdmin") {
     // Super admin fetching all users
-    // const query = req.query;
-    // const data = (await User.find(query)).reverse();
-    const apifeatures = new ApiFeatures(User.find(), req.query).search();
-    const data = await apifeatures.query;
+    const query = req.query;
+    const data = (await User.find(query)).reverse();
+    // const apifeatures = new ApiFeatures(User.find(), req.query).search();
+    // const data = await apifeatures.query;
 
     const totalUser = data.length;
     // const totaluser = data.reverse();
