@@ -334,8 +334,10 @@ const AllUser = TryCatch(async (req, res) => {
  
 const UpdateUser = TryCatch(async (req, res,next) => {
   const userId = req.params.id;
+  const user = await User.findById(userId);
+
 // super admin
-  if(req.user.role === "superAdmin"){
+  if(user.role === "superAdmin"||"admin"||"teacher"){
     
      if (req.file) {
        // udate image
@@ -377,7 +379,6 @@ const UpdateUser = TryCatch(async (req, res,next) => {
      }
   }
 // other user
-  const user = await User.findById(userId);
 
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
