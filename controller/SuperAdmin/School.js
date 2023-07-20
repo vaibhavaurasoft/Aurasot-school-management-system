@@ -405,7 +405,6 @@ const DeleteSchool = TryCatch(async (req, res, next) => {
   if (!schoolId) {
     return res.json({ error: "Please provide SchoolId" });
   }
-
   const school = await School.findByIdAndDelete(schoolId);
   if (!school) {
     return res.json({ error: "No School Available with this id" });

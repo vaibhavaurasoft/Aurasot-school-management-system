@@ -50,7 +50,7 @@ router.delete(
 router.get(
   "/Alluser",
   auth.isAuthenticateUser,
-  auth.authorizeRole("superAdmin"),
+  // auth.authorizeRole("superAdmin"),
   User.AllUser
 );
 

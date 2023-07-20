@@ -17,7 +17,7 @@ const createSection = TryCatch(async (req, res) => {
   });
 });
 
-// Get All Sections
+// Get All Sections 
 const getSections = TryCatch(async (req, res) => {
   const schoolId = req.user.schoolId;
 

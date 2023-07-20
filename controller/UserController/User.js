@@ -116,7 +116,7 @@ const AddUser = TryCatch(async (req, res, next) => {
 
     // Create user
     var user = await User.create({
-      ...req.body,
+      ...req64acfd1b2fdab1902063b4d1.body,
       userimage: {
         public_id: mycloud.public_id,
         url: mycloud.secure_url,
@@ -179,11 +179,14 @@ const UserbyId = TryCatch(async (req, res, next) => {
 
   const role = req.user.role;
   if (role === "superAdmin" || role === "admin" || role === "teacher") {
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate({
+      path: "schoolId",
+      select: ["schoolname"],
+    });
     if (!user) {
       return next(new ErrorHandler("User not found", 404));
     }
-    res.json({ user });
+    res.json({success : true ,id ,user });
   }
 
   // Find user by ID
@@ -201,8 +204,7 @@ const UserbyId = TryCatch(async (req, res, next) => {
   const classFees = await Fee.findOne({ schoolId, classId: classid });
   // if(role==="student"){
   var totalFess = classFees.fees;
-  var totalpaidfee =
-    Iduser.feesinstall1 + Iduser.feesinstall2 + Iduser.feesinstall3;
+  var totalpaidfee = Iduser.feesinstall1 + Iduser.feesinstall2 + Iduser.feesinstall3;
 
   var remingfees = totalFess - totalpaidfee;
 
@@ -229,6 +231,8 @@ const UserbyId = TryCatch(async (req, res, next) => {
   });
 });
 
+
+
 // find all student by class Id
 
 const StudentByClassID = TryCatch(async (req, res, next) => {
@@ -250,7 +254,15 @@ const AllUser = TryCatch(async (req, res) => {
   if (req.user.role == "superAdmin") {
     // Super admin fetching all users
     const query = req.query;
-    const data = (await User.find(query)).reverse();
+       const searchQuery = {
+         ...query,
+       };
+    // const data = (await User.find(query)).reverse();
+     const apifeatures = new ApiFeatures(
+       User.find(searchQuery),
+       req.query
+     ).search();
+     const data = await apifeatures.query;
     // const apifeatures = new ApiFeatures(User.find(), req.query).search();
     // const data = await apifeatures.query;
 
@@ -319,51 +331,52 @@ const AllUser = TryCatch(async (req, res) => {
     res.status(200).json({ totalUser, data });
   }
 });
-
-const UpdateUser = TryCatch(async (req, res, next) => {
+ 
+const UpdateUser = TryCatch(async (req, res,next) => {
   const userId = req.params.id;
-  // super admin
-  if (req.user.role === "superAdmin") {
-    if (req.file) {
-      // udate image
-      // file upload
-      const file = req.file;
-      const fileUri = getDataUri(file);
-      // using cloudnary
-      const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
+// super admin
+  if(req.user.role === "superAdmin"){
+    
+     if (req.file) {
+       // udate image
+       // file upload
+       const file = req.file;
+       const fileUri = getDataUri(file);
+       // using cloudnary
+       const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
 
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        {
-          $set: {
-            ...req.body,
-            userimage: {
-              public_id: mycloud.public_id,
-              url: mycloud.secure_url,
-            },
-          },
-        },
-        { new: true }
-      );
-      res.status(200).json({
-        success: true,
-        message: "User updated successfully",
-        updatedUser,
-      });
-    } else {
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { $set: req.body },
-        { new: true }
-      );
-      res.status(200).json({
-        success: true,
-        message: "User updated successfully",
-        updatedUser,
-      });
-    }
+       const updatedUser = await User.findByIdAndUpdate(
+         userId,
+         {
+           $set: {
+             ...req.body,
+             userimage: {
+               public_id: mycloud.public_id,
+               url: mycloud.secure_url,
+             },
+           },
+         },
+         { new: true }
+       );
+       res.status(200).json({
+         success: true,
+         message: "User updated successfully",
+         updatedUser,
+       });
+     } else {
+       const updatedUser = await User.findByIdAndUpdate(
+         userId,
+         { $set: req.body },
+         { new: true }
+       );
+       res.status(200).json({
+         success: true,
+         message: "User updated successfully",
+         updatedUser,
+       });
+     }
   }
-  // other user
+// other user
   const user = await User.findById(userId);
 
   if (!user) {

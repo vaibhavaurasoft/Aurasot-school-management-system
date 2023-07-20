@@ -66,7 +66,6 @@ class ApiFeatures {
           },
         }
       : {};
-    console.log(name);
     this.query = this.query.find({ ...name });
     return this;
   }
