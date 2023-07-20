@@ -28,13 +28,31 @@ const AddUser1 = TryCatch(async (req, res, next) => {
   req.body.CreateByuser = req.user.id;
   req.body.schoolId = req.user.schoolId;
   if (req.file) {
-    req.body.profilepic = req.file.filename;
+    // file upload
+    const file = req.file;
+    const fileUri = getDataUri(file);
+    // using cloudnary
+    const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
+
+    // Create user
+    var user = await User.create({
+      ...req.body,
+      userimage: {
+        public_id: mycloud.public_id,
+        url: mycloud.secure_url,
+      },
+    });
+  } else {
+    // Create user
+    var user = await User.create({
+      ...req.body,
+      userimage: {
+        public_id: "aoasncmxslmrzek6uz0t",
+        url: "https://res.cloudinary.com/dgtrp5bxo/image/upload/v1689078341/149071_qq9pk2.png",
+      },
+    });
   }
 
-  // const file  = req.file
-  // console.log(file)
-  // Create user
-  const user = await User.create(req.body);
   // sending mail
   let testAccount = await nodemailer.createTestAccount();
 
@@ -55,7 +73,18 @@ const AddUser1 = TryCatch(async (req, res, next) => {
     to: `${user.email}`, // list of receivers
     subject: `Account created for ${req.body.role} `, // Subject line
     text: "created account", // plain text body
-    html: `Here is your creadencial <br> email - ${user.email} <br> password - ${req.body.password} `, // html body
+    html: `<p>Dear User,</p>
+    <p>We are delighted to welcome to our Aurasoft school management system. .</p>
+    <p>Here are your school credentials:</p>
+    <ul>
+      <li>Email: ${user.email}</li>
+      <li>Password: ${req.body.password}</li>
+    </ul> 
+    <p>Thank you for joining us, and we hope you enjoy using our school management system.</p>
+    <p>Sincerely,</p>
+    <p>Aurasoft School Management System Team</p>
+    <img src="https://res.cloudinary.com/dgtrp5bxo/image/upload/c_thumb,w_200,g_face/v1689076432/aurasoftblack_lsevrd.png"/>
+    `, // html body
   });
 
   res.status(201).json({
@@ -158,21 +187,22 @@ const UserbyId = TryCatch(async (req, res, next) => {
   }
 
   // Find user by ID
-  const user = await User.findById(id);
-  if (!user) {
+  const Iduser = await User.findById(id);
+  if (!Iduser) {
     return next(new ErrorHandler("User not found", 404));
   }
 
   // Find class
-  const classid = await user.classId;
+  const classid = await Iduser.classId;
   const classfind = await SchoolClass.findOne(classid);
 
   // Find fee
-  const schoolId = await user.schoolId;
+  const schoolId = await Iduser.schoolId;
   const classFees = await Fee.findOne({ schoolId, classId: classid });
   // if(role==="student"){
   var totalFess = classFees.fees;
-  var totalpaidfee = user.feesinstall1 + user.feesinstall2 + user.feesinstall3;
+  var totalpaidfee =
+    Iduser.feesinstall1 + Iduser.feesinstall2 + Iduser.feesinstall3;
 
   var remingfees = totalFess - totalpaidfee;
 
@@ -185,8 +215,8 @@ const UserbyId = TryCatch(async (req, res, next) => {
   };
   const exams = await SchoolExam.find(searchQuery);
 
-  const alldata = {
-    ...user.toObject(),
+  const user = {
+    ...Iduser.toObject(),
     classs: classfind.className,
     allfess: totalFess,
     pandingFee: remingfees,
@@ -195,7 +225,7 @@ const UserbyId = TryCatch(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    alldata,
+    user,
   });
 });
 
@@ -290,8 +320,50 @@ const AllUser = TryCatch(async (req, res) => {
   }
 });
 
-const UpdateUser = TryCatch(async (req, res) => {
+const UpdateUser = TryCatch(async (req, res, next) => {
   const userId = req.params.id;
+  // super admin
+  if (req.user.role === "superAdmin") {
+    if (req.file) {
+      // udate image
+      // file upload
+      const file = req.file;
+      const fileUri = getDataUri(file);
+      // using cloudnary
+      const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            ...req.body,
+            userimage: {
+              public_id: mycloud.public_id,
+              url: mycloud.secure_url,
+            },
+          },
+        },
+        { new: true }
+      );
+      res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        updatedUser,
+      });
+    } else {
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { $set: req.body },
+        { new: true }
+      );
+      res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        updatedUser,
+      });
+    }
+  }
+  // other user
   const user = await User.findById(userId);
 
   if (!user) {

@@ -4,12 +4,51 @@ const Trycatch = require("../../middleware/TryCatch");
 const User = require("../../model/User/User");
 
 // Get a specific notification by ID
+
+// // Create a new notification
+// const createNotification = Trycatch(async (req, res, next) => {
+//   req.body.createdByUser = req.user.id;
+//   req.body.schoolId = req.user.schoolId;
+//   const notification = await Notification.create(req.body);
+
+//   const schoolId = req.user.schoolId;
+//   if (notification.for) {
+//     var role = notification.for;
+//     var searchQuery = {
+//       schoolId,
+//       role, 
+//     };
+//   }
+//   if (!notification.for) {
+//     var searchQuery = {
+//       schoolId,
+//     };
+//   }
+
+//   const data = await User.find(searchQuery);
+//   const toteluser = await data.length;
+//   for (let i = 0; i < data.length; i++) {
+//     const user = data[i];
+//     var notificationsend = await Notification2.create({
+//       notificationId: notification._id,
+//       userId: user._id,
+//     }); 
+//   }
+//   res.status(201).json({
+//     message: "Notification send successfully",
+//     send: `send notification to ${toteluser} , role is ${role}`,
+//     notification,
+//   });
+// });
+
+
 // Create a new notification
 const createNotification = Trycatch(async (req, res, next) => {
   req.body.createdByUser = req.user.id;
   req.body.schoolId = req.user.schoolId;
+  // notificaion created in table 1
   const notification = await Notification.create(req.body);
-
+// create notification for 
   const schoolId = req.user.schoolId;
   if (notification.for) {
     var role = notification.for;
@@ -24,21 +63,67 @@ const createNotification = Trycatch(async (req, res, next) => {
     };
   }
 
-  const data = await User.find(searchQuery);
-  const toteluser = await data.length;
-  for (let i = 0; i < data.length; i++) {
-    const user = data[i];
-    var notificationsend = await Notification2.create({
-      notificationId: notification._id,
-      userId: user._id,
-    }); 
+  // Send notification to specific user by ID
+  if (req.body.userId) {
+    const user = await User.findOne({
+      _id: req.body.userId,
+      schoolId,
+    });
+    if (user) {
+      const notificationsend = await Notification2.create({
+        notificationId: notification._id,
+        userId: user._id,
+      });
+      res.status(201).json({
+        message: "Notification sent successfully to specific user",
+        send: `Sent notification to user ID: ${user._id}`,
+        notification,
+      });
+    } else {
+      res.status(404).json({
+        message: "User not found",
+      });
+    }
   }
-  res.status(201).json({
-    message: "Notification send successfully",
-    send: `send notification to ${toteluser} , role is ${role}`,
-    notification,
-  });
+  // Send notification to class ID
+  else if (req.body.classId) {
+    const users = await User.find({
+      schoolId,
+      classId: req.body.classId,
+    });
+    const totalUsers = users.length;
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      const notificationsend = await Notification2.create({
+        notificationId: notification._id,
+        userId: user._id,
+      });
+    }
+    res.status(201).json({
+      message: "Notification sent successfully to class",
+      send: `Sent notification to class ID: ${req.body.classId}, Total users: ${totalUsers}`,
+      notification,
+    });
+  }
+  // Send notification to all users in the search query
+  else {
+    const data = await User.find(searchQuery);
+    const totalUsers = data.length;
+    for (let i = 0; i < data.length; i++) {
+      const user = data[i];
+      const notificationsend = await Notification2.create({
+        notificationId: notification._id,
+        userId: user._id,
+      });
+    }
+    res.status(201).json({
+      message: "Notification sent successfully",
+      send: `Sent notification to ${totalUsers} users, role is ${role}`,
+      notification,
+    });
+  }
 });
+
 
 // Get all notifications
 const getAllNotifications = Trycatch(async (req, res) => {

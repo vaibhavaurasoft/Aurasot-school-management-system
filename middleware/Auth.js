@@ -6,7 +6,7 @@ const User = require("../model/User/User");
 // const isAuthenticateUser = TryCatch(async (req, res, next) => {
 //   const { token } = req.cookies;
 
-//   // Check if token exists
+// //   // Check if token exists
 //   if (!token) {
 //     return res
 //       .status(404) 
