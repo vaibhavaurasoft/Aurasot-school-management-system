@@ -119,13 +119,95 @@ const Users = new mongoose.Schema({
   CreateByuser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
-  }, 
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
   age: {
     type: Number,
+  },
+  SSSMid: {
+    type: Number,
+    maxLength: [9, "Number can not exceed 9 digits"],
+    minLength: [8, "Number must be at least 8 digits"],
+    default: 00000000,
+  },
+  qualification: {
+    type: String,
+  },
+  cast: {
+    type: String,
+  },
+  pancard: {
+    type: String,
+    maxLength: [10, "Number can not exceed 10 digits"],
+    minLength: [10, "Number must be at least 10 digits"],
+    default: 000000000,
+  },
+  dob: {
+    type: Date,
+  },
+  preferredsubject: {
+    type: String,
+  },
+  mothername: {
+    name: String,
+  },
+  fathername: {
+    name: String,
+  },
+  fatheremail: {
+    type: String,
+    required: [true, "Please Email Id"],
+    validate: [validator.isEmail, "Please enter a valid email"],
+  },
+  motheremail: {
+    type: String,
+    required: [true, "Please Email Id"],
+    validate: [validator.isEmail, "Please enter a valid email"],
+  },
+  fatherqualification: {
+    type: String,
+  },
+  motherqualification: {
+    type: String,
+  },
+  fatheroccupation: {
+    type: String,
+  },
+  motheroccupation: {
+    type: String,
+  },
+  previousschoolname: {
+    type: String,
+  },
+  previousclass: {
+    type: String,
+  },
+  previousboard: {
+    type: String,
+  },
+  previoussessionyear: {
+    type: Number,
+  },
+  previousclasspercentage: {
+    type: String,
+  },
+  accountholdername: {
+    type: String,
+  },
+  accountnumber: {
+    type: Number,
+    maxLength: [14, "Number can not exceed 10 digits"],
+    minLength: [14, "Number must be at least 10 digits"],
+    default: 00000000000000,
+  },
+  ifsc: {
+    type: Number,
+    maxLength: [11, "Number can not exceed 10 digits"],
+    minLength: [11, "Number must be at least 10 digits"],
+    default: 00000000000,
   },
   gender: {
     type: String,

@@ -26,6 +26,7 @@ const NoticeboardRoutes = require("./Routes/Admin/noticebord");
 const AddStudentRoutes = require("./Routes/Teacher/AddStudent");
 const UserRoutes = require("./Routes/User/user");
 const SectionRoutes = require("./Routes/schoolClass/classection");
+const SchoolBoard = require("./Routes/school/board")
 
 app.use("/", NotificationRoutes);
 app.use("/", ClassRoutineRoutes);
@@ -40,6 +41,7 @@ app.use("/", AddStudentRoutes);
 app.use("/", UserRoutes);
 app.use("/", SectionRoutes);
 app.use("/", SchoolClassRoutes);
+app.use("/", SchoolBoard);
 
 // middelwear for error
 app.use(Error);

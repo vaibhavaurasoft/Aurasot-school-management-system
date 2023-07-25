@@ -24,7 +24,7 @@ const RegisterSchool = new mongoose.Schema({
   principalname: {
     type: String,
   },
- 
+
   principalemail: {
     type: String,
     // required: [true, "Please enter Principal email id"],
@@ -83,7 +83,7 @@ const RegisterSchool = new mongoose.Schema({
         // required: true,
       },
       url: {
-        type: String, 
+        type: String,
         // required: true,
       },
     },
@@ -101,17 +101,18 @@ const RegisterSchool = new mongoose.Schema({
     type: String,
     // required: [true, "Please enter Address"],
   },
-  schoolId: {
-    type: Number,
-    // required: [true, "Please enter School Id"],
-  },
+
   entrollmentYear: {
     type: Number,
     // required: [true, "Please enter School Entrollment Year"],
   },
+  schoollanguage: {
+    type: String,
+    enum: ["English", "Hindi", "Marathi", "Gujarat", "Panjabi", "other"],
+  },
   schooltype: {
     type: String,
-    // required: [true, "Please enter School Type"],
+    enum: ["Private", "Government"],
   },
   bordtype: {
     type: String,
