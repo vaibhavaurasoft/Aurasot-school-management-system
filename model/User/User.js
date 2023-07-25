@@ -129,8 +129,8 @@ const Users = new mongoose.Schema({
   },
   SSSMid: {
     type: Number,
-    maxLength: [9, "Number can not exceed 9 digits"],
-    minLength: [8, "Number must be at least 8 digits"],
+    // maxLength: [9, "Number can not exceed 9 digits"],
+    // minLength: [8, "Number must be at least 8 digits"],
     default: 00000000,
   },
   qualification: {
@@ -141,8 +141,8 @@ const Users = new mongoose.Schema({
   },
   pancard: {
     type: String,
-    maxLength: [10, "Number can not exceed 10 digits"],
-    minLength: [10, "Number must be at least 10 digits"],
+    // maxLength: [10, "Number can not exceed 10 digits"],
+    // minLength: [10, "Number must be at least 10 digits"],
     default: 000000000,
   },
   dob: {
@@ -159,12 +159,12 @@ const Users = new mongoose.Schema({
   },
   fatheremail: {
     type: String,
-    required: [true, "Please Email Id"],
+    // required: [true, "Please Email Id"],
     validate: [validator.isEmail, "Please enter a valid email"],
   },
   motheremail: {
     type: String,
-    required: [true, "Please Email Id"],
+    // required: [true, "Please Email Id"],
     validate: [validator.isEmail, "Please enter a valid email"],
   },
   fatherqualification: {
