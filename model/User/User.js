@@ -197,6 +197,12 @@ const Users = new mongoose.Schema({
   accountholdername: {
     type: String,
   },
+  adharcardnumber: {
+    type: Number,
+    maxLength: [12, "Number can not exceed 10 digits"],
+    minLength: [12, "Number must be at least 10 digits"],
+    default: 000000000000,
+  },
   accountnumber: {
     type: Number,
     maxLength: [14, "Number can not exceed 10 digits"],
@@ -204,7 +210,7 @@ const Users = new mongoose.Schema({
     default: 00000000000000,
   },
   ifsc: {
-    type: Number,
+    type: String,
     maxLength: [11, "Number can not exceed 10 digits"],
     minLength: [11, "Number must be at least 10 digits"],
     default: 00000000000,
