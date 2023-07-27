@@ -155,6 +155,7 @@ const AddUser = TryCatch(async (req, res, next) => {
     const existingFees = await Fee.findOne(searchQuery);
     const feesData = existingFees.fees;
     user.totalFeeofStudent = feesData;
+    user.totalreminingfee = feesData;
     user.save();
   }
   }
