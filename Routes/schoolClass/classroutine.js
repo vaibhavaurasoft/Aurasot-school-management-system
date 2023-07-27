@@ -6,6 +6,13 @@ const auth = require("../../middleware/Auth");
 router
   .route("/add-class-routines")
   .post(auth.isAuthenticateUser, data.createClassRoutine);
+  // Route to get a class routine by ID
+router.get(
+  "/class-routines/routeid/:id",
+  auth.isAuthenticateUser,
+  data.getClassRoutineById
+);
+
 router
   .route("/class-routines")
   .get(auth.isAuthenticateUser, data.getClassRoutinesBySchool);

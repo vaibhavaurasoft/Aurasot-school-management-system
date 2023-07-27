@@ -72,7 +72,7 @@ const SeeAllFee = TryCatch(async (req, res) => {
 });
 
 // GetFeesByfeesId
-const GetFeesByClassName = TryCatch(async (req, res) => {
+const GetFeesByfeedID = TryCatch(async (req, res) => {
   const { id } = req.params;
 
   const existingFees = await Fee.findById(id);
@@ -92,6 +92,35 @@ const GetFeesByClassName = TryCatch(async (req, res) => {
     Schoolclass: existingFees.classname,
   });
 });
+
+
+
+// GetFeesByclassId
+const GetFeesByclassID = TryCatch(async (req, res) => {
+  const { id } = req.params;
+   const schoolId = req.user.schoolId;
+  const searchQuery = {
+    schoolId,
+    classId: id,
+  };
+  const existingFees = await Fee.findOne(searchQuery);
+
+  if (!existingFees) {
+    return res.status(404).json({
+      success: false,
+      message: "Fees not found.",
+    });
+  }
+
+  const feesData = existingFees.fees;
+  res.status(200).json({
+    success: true,
+    message: "School fees fetched successfully.",
+    fees: feesData,
+    Schoolclass: existingFees.classname,
+  });
+});
+
 
 // update fees
 const UpdateFees = TryCatch(async (req, res) => {
@@ -197,8 +226,9 @@ module.exports = {
   AddFees,
   SeeAllFee,
   UpdateFees,
-  GetFeesByClassName,
+  GetFeesByfeedID,
   MyFees,
   MySchoolFees,
   DelteFess,
+  GetFeesByclassID,
 };

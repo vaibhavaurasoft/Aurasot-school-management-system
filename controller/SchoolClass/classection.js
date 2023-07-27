@@ -62,7 +62,7 @@ const getSectionById = TryCatch(async (req, res) => {
     return res.status(404).json({
       success: false,
       error: "Section not found",
-    });
+    }); 
   }
 
   res.status(200).json({

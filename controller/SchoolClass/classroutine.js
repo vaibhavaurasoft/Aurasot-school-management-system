@@ -53,15 +53,14 @@ const updateClassRoutine1 = TryCatch(async (req, res) => {
   });
   res.status(200).json(updatedClassRoutine);
 });
+
 // Update routine
 const updateClassRoutine = TryCatch(async (req, res) => {
   const { id } = req.params;
 
-  const updatedClassRoutine = await ClassRoutine.findByIdAndUpdate(
-    id,
-    { $set: req.body },
-    { new: true }
-  );
+  const updatedClassRoutine = await ClassRoutine.findByIdAndUpdate(id, {
+    $set: req.body,
+  });
 
   if (!updatedClassRoutine) {
     return res.status(404).json({ error: "Class routine not found" });
@@ -83,7 +82,7 @@ const deleteClassRoutine = TryCatch(async (req, res) => {
 // my routine
 const MySchoolRoutine = TryCatch(async (req, res) => {
   const schoolId = req.user.schoolId;
-   const classId = req.user.classId;
+  const classId = req.user.classId;
   const searchQuery = {
     schoolId,
     classId,
@@ -93,11 +92,29 @@ const MySchoolRoutine = TryCatch(async (req, res) => {
     select: ["schoolname"],
   });
 
-
-
   res.status(200).json({
     myRoutine,
   });
+});
+
+
+// Get class routine by ID
+const getClassRoutineById = TryCatch(async (req, res) => {
+  const { id } = req.params;
+  const schoolId = req.user.schoolId;
+
+  const searchQuery = {
+    _id: id,
+    schoolId,
+  };
+
+  const classRoutine = await ClassRoutine.findOne(searchQuery);
+
+  if (!classRoutine) {
+    return res.status(404).json({ error: "Class routine not found" });
+  }
+
+  res.status(200).json(classRoutine);
 });
 
 module.exports = {
@@ -107,4 +124,5 @@ module.exports = {
   deleteClassRoutine,
   getClassRoutinesBySchool,
   MySchoolRoutine,
+  getClassRoutineById,
 };

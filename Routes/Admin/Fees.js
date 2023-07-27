@@ -19,11 +19,8 @@ router.get(
 );
 
 // get fees by class ID
-router.get(
-  "/feesbyclassid/:id",
-  auth.isAuthenticateUser,
-  Data.GetFeesByClassName 
-);
+router.get("/feesbyclassid/:id", auth.isAuthenticateUser, Data.GetFeesByfeedID);
+router.get("/feesbyclass/:id", auth.isAuthenticateUser, Data.GetFeesByclassID);
 
 // delete fees by class ID
 router.delete(

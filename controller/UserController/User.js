@@ -122,6 +122,19 @@ const AddUser = TryCatch(async (req, res, next) => {
         url: mycloud.secure_url,
       },
     });
+
+  if (user.classId) {
+    const id  = user.classId;
+    const schoolId = user.schoolId;
+    const searchQuery = {
+      schoolId,
+      classId: id,
+    };
+    const existingFees = await Fee.findOne(searchQuery);
+    const feesData = existingFees.fees;
+    user.totalFeeofStudent = feesData;
+    user.save();
+  }
   } else {
     // Create user
     var user = await User.create({
@@ -131,6 +144,19 @@ const AddUser = TryCatch(async (req, res, next) => {
         url: "https://res.cloudinary.com/dgtrp5bxo/image/upload/v1689078341/149071_qq9pk2.png",
       },
     });
+
+  if (user.classId) {
+    const id  = user.classId;
+    const schoolId = user.schoolId;
+    const searchQuery = {
+      schoolId,
+      classId: id,
+    };
+    const existingFees = await Fee.findOne(searchQuery);
+    const feesData = existingFees.fees;
+    user.totalFeeofStudent = feesData;
+    user.save();
+  }
   }
 
   // sending mail
@@ -171,6 +197,7 @@ const AddUser = TryCatch(async (req, res, next) => {
     success: true,
     user,
   });
+
 });
 
 // Get user by ID

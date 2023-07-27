@@ -42,6 +42,7 @@ const Users = new mongoose.Schema({
   subject: {
     type: String,
   },
+
   paidFees: {
     type: Number,
   },
@@ -148,6 +149,12 @@ const Users = new mongoose.Schema({
   dob: {
     type: Date,
   },
+  city: {
+    type: String,
+  },
+  qulification: {
+    type: String,
+  },
   preferredsubject: {
     type: String,
   },
@@ -199,15 +206,15 @@ const Users = new mongoose.Schema({
   },
   adharcardnumber: {
     type: Number,
-    default: 000000000000,
+  },
+  bankname: {
+    type: String,
   },
   accountnumber: {
     type: Number,
-    default: 00000000000000,
   },
   ifsc: {
     type: String,
-    default: 00000000000,
   },
   gender: {
     type: String,
